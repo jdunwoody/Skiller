@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -14,28 +13,28 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class ParseJSON extends ListActivity {
+public class TaskActivity extends ListActivity {
+
+	private static final String LOG_TAG = TaskActivity.class.toString();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item, translateToView(readData())));
+		String url = getResources().getString(R.string.server_url) + "/tasks.json";
+
+		setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item, translateToView(readData(url))));
 		setupListView();
 	}
 
@@ -49,7 +48,7 @@ public class ParseJSON extends ListActivity {
 				results[i] = jsonObject.getString("name");
 			}
 		} catch (Exception e) {
-			Log.e(ParseJSON.class.getName(), e.getMessage());
+			Log.e(SkillTreeActivity.class.getName(), e.getMessage());
 			e.printStackTrace();
 		}
 		return results;
@@ -61,15 +60,20 @@ public class ParseJSON extends ListActivity {
 
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Toast.makeText(getApplicationContext(), ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(TaskActivity.class.getName());
+				startActivity(intent);
+
+				// Toast.makeText(getApplicationContext(), ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
 
-	public String readData() {
+	public String readData(String url) {
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet("http://10.1.1.9:3000/skill_trees.json");
+		Log.i(LOG_TAG, "Accessing url " + url);
+
+		HttpGet httpGet = new HttpGet(url);
 		try {
 			HttpResponse response = client.execute(httpGet);
 			StatusLine statusLine = response.getStatusLine();
@@ -83,7 +87,7 @@ public class ParseJSON extends ListActivity {
 					builder.append(line);
 				}
 			} else {
-				Log.e(ParseJSON.class.toString(), "Failed to download file");
+				Log.e(LOG_TAG, "Failed to download file");
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();

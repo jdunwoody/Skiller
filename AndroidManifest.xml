@@ -20,7 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="ParseJSON" >
+        <activity android:name=".SkillTreeActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_SEARCH" />
 

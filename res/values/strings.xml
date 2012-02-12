@@ -2,5 +2,6 @@
 <resources>
 
     <string name="app_name">Skiller</string>
+    <string name="server_url">http://glowing-sunset-9969.herokuapp.com/</string>
 
 </resources>
