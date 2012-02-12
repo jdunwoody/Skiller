@@ -2,7 +2,6 @@ package com.james.skiller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.james.skiller.model.SkillTree;
@@ -22,16 +21,16 @@ public class SkillerActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		List<SkillTree> skillTrees;
+		// List<SkillTree> skillTrees;
 		try {
-			skillTrees = loadData();
+			loadData();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		
-		String[] skillTreesString = new String[]{};
-		
-		setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item, skillTreesString);
+
+		String[] skillTreesString = new String[] {};
+
+		setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item, skillTreesString));
 		setupListView();
 	}
 
@@ -43,9 +42,9 @@ public class SkillerActivity extends ListActivity {
 		return skillTrees;
 	}
 
-	private String[] skillTrees() {
-		return new String[] { "Programming", "Swimming", "Gym", "Fatherhood" };
-	}
+	// private String[] skillTrees() {
+	// return new String[] { "Programming", "Swimming", "Gym", "Fatherhood" };
+	// }
 
 	private void setupListView() {
 		ListView lv = getListView();
