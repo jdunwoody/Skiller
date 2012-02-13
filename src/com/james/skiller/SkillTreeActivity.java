@@ -65,10 +65,9 @@ public class SkillTreeActivity extends ListActivity {
 
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent intent = new Intent(TaskActivity.class.getName());
+				Intent intent = new Intent(view.getContext(), TaskActivity.class);
+				intent.putExtra("skill_tree_id", "1");
 				startActivity(intent);
-
-				// Toast.makeText(getApplicationContext(), ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
 			}
 		});
 	}

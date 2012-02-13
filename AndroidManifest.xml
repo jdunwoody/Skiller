@@ -11,20 +11,17 @@
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
-        <activity
-            android:name=".SkillerActivity"
-            android:label="@string/app_name" >
+        <activity android:name=".SkillTreeActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SkillTreeActivity" >
+        <activity android:name="TaskActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MEDIA_SEARCH" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.PICK"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
     </application>
