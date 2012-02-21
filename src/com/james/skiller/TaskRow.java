@@ -4,7 +4,7 @@ public class TaskRow {
 	private final String skillTree;
 	private final String level;
 	private final String task;
-	private final boolean status;
+	private boolean status;
 	private final String url;
 	private final int taskId;
 
@@ -23,5 +23,13 @@ public class TaskRow {
 
 	public int getTaskId() {
 		return taskId;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public boolean getStatus() {
+		return status;
 	}
 }

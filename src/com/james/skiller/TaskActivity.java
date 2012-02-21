@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
@@ -17,17 +16,17 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ListActivity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,8 +48,7 @@ public class TaskActivity extends ListActivity {
 			skill_tree_id = extras.getString("skill_tree_id");
 			Log.w(LOG_TAG, "Looking up skill_tree: " + skill_tree_id);
 		}
-		setListAdapter(new ArrayAdapter<TaskRow>(this, android.R.layout.simple_list_item_1, translateToView(readData())));
-		// setListAdapter(new ArrayAdapter<TaskRow>(this, R.layout.list_item, translateToView(readData())));
+		setListAdapter(new ArrayAdapter<TaskRow>(this, R.layout.list_item, translateToView(readData())));
 		setupListView();
 	}
 
@@ -78,8 +76,7 @@ public class TaskActivity extends ListActivity {
 					String taskName = task.getString("name");
 					int task_id = task.getInt("id");
 					String skillTreeName = skillTree.getString("name");
-					String url = getResources().getString(R.string.server_url) + "/tasks/" + task_id + "/complete.json";
-					// boolean taskStatus = task.getBoolean("status");
+					String url = getResources().getString(R.string.server_url) + "/tasks/" + task_id + "/toggle_complete.json";
 					boolean taskStatus = task.getString("status") == "true";
 
 					Log.i(LOG_TAG, "Task: " + task);
@@ -113,19 +110,53 @@ public class TaskActivity extends ListActivity {
 
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Toast.makeText(getApplicationContext(), ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
+				Log.i(LOG_TAG, "Clicked view at postition: " + position + " with id: " + id);
+				TextView textView = (TextView) view;
+				// Toast.makeText(getApplicationContext(), textView.getText(), Toast.LENGTH_SHORT).show();
 				TaskRow item = (TaskRow) getListAdapter().getItem(position);
 
-				toggleStatus(item);
+				item.setStatus(toggleStatus(item));
+
+				textView.setText(item.toString());
+				updateColour(item, textView);
+				textView.invalidate();
+				Log.i(LOG_TAG, item.toString());
+
+				// startActivity(getIntent());
+				// finish();
+				// textView.invalidate();
+				// ArrayAdapter listAdaptor = (ArrayAdapter) getListAdapter();
+				// listAdaptor.notifyDataSetChanged();
+
+				// ArrayAdapter<TaskRow> listAdapter = new ArrayAdapter<TaskRow>(this, R.layout.list_item, list);
+				// ((BaseAdapter) listAdapter).notifyDataSetChanged();
 			}
+
 		});
 	}
 
-	public void toggleStatus(TaskRow item) {
+	private void updateColour(TaskRow item, TextView textView) {
+		int newColour = item.getStatus() ? R.color.light_cream : R.color.faded;
+		textView.setBackgroundColor(newColour);
+		Log.i(LOG_TAG, "updatedColour: " + newColour);
+	}
+
+	private boolean readStatus(String data) {
+		try {
+			JSONObject obj = new JSONObject(data);
+		} catch (JSONException e) {
+			Log.e(LOG_TAG, e.getMessage());
+			e.printStackTrace();
+		}
+
+		return true;
+	}
+
+	public boolean toggleStatus(TaskRow item) {
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
 
-		String url = getResources().getString(R.string.server_url) + "tasks/" + item.getTaskId() + "/complete.json";
+		String url = getResources().getString(R.string.server_url) + "tasks/" + item.getTaskId() + "/toggle_complete.json";
 
 		HttpPut httpPut = new HttpPut(url);
 		try {
@@ -143,11 +174,11 @@ public class TaskActivity extends ListActivity {
 			} else {
 				Log.e(LOG_TAG, "Failed to download file");
 			}
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
+			Log.e(LOG_TAG, e.getMessage());
 			e.printStackTrace();
 		}
+		return Boolean.parseBoolean(builder.toString());
 	}
 
 	public String readData() {
@@ -173,11 +204,11 @@ public class TaskActivity extends ListActivity {
 			} else {
 				Log.e(LOG_TAG, "Failed to download file");
 			}
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
+			Log.e(LOG_TAG, e.getMessage());
 			e.printStackTrace();
 		}
+
 		return builder.toString();
 	}
 }
