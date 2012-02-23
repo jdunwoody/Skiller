@@ -48,7 +48,8 @@ public class TaskActivity extends ListActivity {
 			skill_tree_id = extras.getString("skill_tree_id");
 			Log.w(LOG_TAG, "Looking up skill_tree: " + skill_tree_id);
 		}
-		setListAdapter(new ArrayAdapter<TaskRow>(this, R.layout.list_item, translateToView(readData())));
+		setListAdapter(new FancyArrayAdapter(this, translateToView(readData())));
+		
 		setupListView();
 	}
 
