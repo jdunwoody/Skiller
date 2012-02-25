@@ -1,4 +1,4 @@
-package example;
+package com.james.skiller;
 
 import java.util.List;
 
@@ -9,16 +9,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.james.skiller.R;
+import com.james.skiller.model.Row;
 
-public class OrderAdapter extends ArrayAdapter<Order> {
+public class RowAdapter extends ArrayAdapter<Row> {
 
-	private List<Order> items;
+	private List<Row> rows;
 	private Context context;
 
-	public OrderAdapter(Context context, int textViewResourceId, List<Order> items) {
-		super(context, textViewResourceId, items);
-		this.items = items;
+	public RowAdapter(Context context, int textViewResourceId, List<Row> rows) {
+		super(context, textViewResourceId, rows);
+		this.rows = rows;
 		this.context = context;
 	}
 
@@ -29,15 +29,15 @@ public class OrderAdapter extends ArrayAdapter<Order> {
 			LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = vi.inflate(R.layout.row, null);
 		}
-		Order o = items.get(position);
-		if (o != null) {
+		Row row = rows.get(position);
+		if (row != null) {
 			TextView tt = (TextView) v.findViewById(R.id.toptext);
 			TextView bt = (TextView) v.findViewById(R.id.bottomtext);
 			if (tt != null) {
-				tt.setText("Name: " + o.getOrderName());
+				tt.setText("Name: " + row.getText());
 			}
 			if (bt != null) {
-				bt.setText("Status: " + o.getOrderStatus());
+				bt.setText("Status: " + row.getStatus());
 			}
 		}
 		return v;
