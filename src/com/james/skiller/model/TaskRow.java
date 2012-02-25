@@ -1,4 +1,4 @@
-package com.james.skiller;
+package com.james.skiller.model;
 
 public class TaskRow {
 	private final String skillTree;

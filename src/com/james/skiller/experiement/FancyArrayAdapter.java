@@ -1,4 +1,8 @@
-package com.james.skiller;
+package com.james.skiller.experiement;
+
+import com.james.skiller.R;
+import com.james.skiller.R.layout;
+import com.james.skiller.model.TaskRow;
 
 import android.app.ListActivity;
 import android.view.View;

@@ -19,6 +19,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.james.skiller.experiement.FancyArrayAdapter;
+import com.james.skiller.model.TaskRow;
+
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.util.Log;

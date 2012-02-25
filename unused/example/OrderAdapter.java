@@ -1,8 +1,6 @@
 package example;
 
-import java.util.ArrayList;
-
-import com.james.skiller.R;
+import java.util.List;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,12 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.james.skiller.R;
+
 public class OrderAdapter extends ArrayAdapter<Order> {
 
-	private ArrayList<Order> items;
+	private List<Order> items;
 	private Context context;
 
-	public OrderAdapter(Context context, int textViewResourceId, ArrayList<Order> items) {
+	public OrderAdapter(Context context, int textViewResourceId, List<Order> items) {
 		super(context, textViewResourceId, items);
 		this.items = items;
 		this.context = context;

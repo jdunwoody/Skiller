@@ -1,4 +1,4 @@
-package com.james.skiller;
+package com.james.skiller.util;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
