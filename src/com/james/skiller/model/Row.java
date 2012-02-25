@@ -1,12 +1,6 @@
 package com.james.skiller.model;
 
 public class Row {
-	// private final String skillTree;
-	// private final String level;
-	// private final String task;
-	// private final String url;
-	// private final int taskId;
-
 	private final String text;
 	private boolean status;
 	private final int id;
