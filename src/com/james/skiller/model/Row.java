@@ -2,13 +2,17 @@ package com.james.skiller.model;
 
 public class Row {
 	private final String text;
-	private boolean status;
+	private String status;
 	private final int id;
 
-	public Row(String text, boolean status, int id) {
+	public Row(int id, String text, String status) {
 		this.text = text;
 		this.status = status;
 		this.id = id;
+	}
+
+	public Row(int id, String text, boolean status) {
+		this(id, text, String.valueOf(status));
 	}
 
 	public String getText() {
@@ -23,11 +27,15 @@ public class Row {
 		return id;
 	}
 
-	public boolean getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(boolean status) {
+	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public boolean getStatusBoolean() {
+		return Boolean.parseBoolean(status);
 	}
 }

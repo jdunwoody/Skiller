@@ -20,7 +20,6 @@ import org.json.JSONObject;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,51 +29,45 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.james.skiller.helper.DataHelper;
 import com.james.skiller.model.Row;
 
 public class TaskActivity extends ListActivity {
-	private ProgressDialog m_ProgressDialog = null;
-
+	private ProgressDialog progressDialog = null;
 	private static final String LOG_TAG = TaskActivity.class.toString();
-	private RowAdapter m_adapter;
-	private List<Row> m_orders = null;
+	private RowAdapter adapter;
+	private List<Row> rows = null;
 	private Runnable viewOrders;
+	private int skill_tree_id;
+	private final DataHelper dataHelper;
 
-	private String skill_tree_id;
+	public TaskActivity() {
+		super();
+		this.dataHelper = new DataHelper();
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		this.m_orders = new ArrayList<Row>();
-		this.m_adapter = new RowAdapter(this, R.layout.row, m_orders);
-		setListAdapter(this.m_adapter);
+		this.rows = new ArrayList<Row>();
+		this.adapter = new RowAdapter(this, R.layout.row, rows);
+		setListAdapter(this.adapter);
 
-		Bundle extras = getIntent().getExtras();
-		if (extras == null) {
-			skill_tree_id = "1";
-			Toast.makeText(getApplicationContext(), "No skill_tree_id supplied. Defaulting to 1", Toast.LENGTH_SHORT).show();
+		loadParameters();
 
-		} else {
-			skill_tree_id = extras.getString("skill_tree_id");
-			Log.w(LOG_TAG, "Looking up skill_tree: " + skill_tree_id);
-		}
 		getListView().setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				// Intent intent = new Intent(view.getContext(), TaskActivity.class);
-				// intent.putExtra("skill_tree_id", "1");
-				// startActivity(intent);
-
 				Row item = (Row) getListAdapter().getItem(position);
 
 				item.setStatus(toggleStatus(item));
 
 				LinearLayout textView = (LinearLayout) view;
+				TextView bottomView = (TextView) view.findViewById(R.id.bottomtext);
 
-				// textView.setText(item.toString());
-				// updateColour(item, textView);
-				// textView.invalidate();
-				// Log.i(LOG_TAG, item.toString());
+				bottomView.setText(item.getStatus());
+				updateColour(item, bottomView);
+				textView.invalidate();
 			}
 		});
 
@@ -86,18 +79,30 @@ public class TaskActivity extends ListActivity {
 
 		Thread thread = new Thread(null, viewOrders, "MagentoBackground");
 		thread.start();
-		m_ProgressDialog = ProgressDialog.show(this, "Please wait...", "Retrieving data ...", true);
+		progressDialog = ProgressDialog.show(this, "Please wait...", "Retrieving data ...", true);
+	}
+
+	private void loadParameters() {
+		Bundle extras = getIntent().getExtras();
+		if (extras == null) {
+			skill_tree_id = 1;
+			Toast.makeText(getApplicationContext(), "No skill_tree_id supplied. Defaulting to 1", Toast.LENGTH_SHORT).show();
+
+		} else {
+			skill_tree_id = extras.getInt("skill_tree_id");
+			Log.w(LOG_TAG, "Looking up skill_tree: " + skill_tree_id);
+		}
 	}
 
 	private Runnable returnRes = new Runnable() {
 		public void run() {
-			if (m_orders != null && m_orders.size() > 0) {
-				m_adapter.notifyDataSetChanged();
-				for (int i = 0; i < m_orders.size(); i++)
-					m_adapter.add(m_orders.get(i));
+			if (rows != null && rows.size() > 0) {
+				adapter.notifyDataSetChanged();
+				for (int i = 0; i < rows.size(); i++)
+					adapter.add(rows.get(i));
 			}
-			m_ProgressDialog.dismiss();
-			m_adapter.notifyDataSetChanged();
+			progressDialog.dismiss();
+			adapter.notifyDataSetChanged();
 		}
 	};
 
@@ -106,7 +111,7 @@ public class TaskActivity extends ListActivity {
 			String url = getResources().getString(R.string.server_url) + "/skill_trees/" + skill_tree_id + "/everything.json";
 
 			// String url = getResources().getString(R.string.server_url) + "/skill_trees.json";
-			m_orders = jsonToArray(readData(url));
+			rows = jsonToArray(dataHelper.readData(url));
 		} catch (Exception e) {
 			Log.e("BACKGROUND_PROC", e.getMessage());
 		}
@@ -114,33 +119,14 @@ public class TaskActivity extends ListActivity {
 	}
 
 	private List<Row> jsonToArray(String data) {
-		// List<Order> results = new ArrayList<Order>();
-		// try {
-		// JSONArray jsonArray = new JSONArray(data);
-		// for (int i = 0; i < jsonArray.length(); i++) {
-		// JSONObject jsonObject = jsonArray.getJSONObject(i);
-		// results.add(new Order(jsonObject.getString("name"), "Beginner 0%"));
-		// }
-		// } catch (Exception e) {
-		// Log.e(SkillTreeActivity.class.getName(), e.getMessage());
-		// e.printStackTrace();
-		// }
-		// return results;
-
 		List<Row> results = new ArrayList<Row>();
 		try {
-			Log.i(LOG_TAG, "Data is " + data);
-
 			JSONObject skillTree = new JSONObject(data);
-			Log.i(LOG_TAG, "Skill tree: " + skillTree);
-
 			JSONArray levels = skillTree.getJSONArray("levels");
 
 			for (int i = 0; i < levels.length(); i++) {
 				JSONObject level = levels.getJSONObject(i);
-				Log.i(LOG_TAG, "Level: " + level);
 				String levelName = level.getString("name");
-				Log.i(LOG_TAG, "Level name: " + levelName);
 
 				JSONArray tasks = level.getJSONArray("tasks");
 
@@ -153,12 +139,7 @@ public class TaskActivity extends ListActivity {
 					String url = getResources().getString(R.string.server_url) + "/tasks/" + task_id + "/toggle_complete.json";
 					boolean taskStatus = task.getString("status") == "true";
 
-					Log.i(LOG_TAG, "Task: " + task);
-					Log.i(LOG_TAG, "task id: " + task_id);
-					Log.i(LOG_TAG, "task name: " + taskName);
-					Log.i(LOG_TAG, "task status: " + task.getString("status"));
-
-					results.add(new Row(skillTreeName + ": " + levelName + ": " + taskName + ": " + task_id, taskStatus, task_id));
+					results.add(new Row(task_id, taskName, taskStatus));
 				}
 			}
 		} catch (Exception e) {
@@ -172,8 +153,6 @@ public class TaskActivity extends ListActivity {
 	public String readData(String url) {
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
-		Log.i(LOG_TAG, "Accessing url " + url);
-
 		HttpGet httpGet = new HttpGet(url);
 		try {
 			HttpResponse response = client.execute(httpGet);
@@ -198,7 +177,7 @@ public class TaskActivity extends ListActivity {
 		return builder.toString();
 	}
 
-	public boolean toggleStatus(Row item) {
+	public String toggleStatus(Row item) {
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
 
@@ -224,13 +203,12 @@ public class TaskActivity extends ListActivity {
 			Log.e(LOG_TAG, e.getMessage());
 			e.printStackTrace();
 		}
-		return Boolean.parseBoolean(builder.toString());
+		return builder.toString();
 	}
 
 	private void updateColour(Row item, TextView textView) {
-		int newColour = item.getStatus() ? R.color.light_cream : R.color.faded;
-		textView.setBackgroundColor(newColour);
-		Log.i(LOG_TAG, "updatedColour: " + newColour);
+		int newColour = item.getStatusBoolean() ? R.color.light_cream : R.color.faded;
+		textView.setTextColor(newColour);
 	}
 }
 //

@@ -34,10 +34,10 @@ public class RowAdapter extends ArrayAdapter<Row> {
 			TextView tt = (TextView) v.findViewById(R.id.toptext);
 			TextView bt = (TextView) v.findViewById(R.id.bottomtext);
 			if (tt != null) {
-				tt.setText("Name: " + row.getText());
+				tt.setText(row.getText());
 			}
 			if (bt != null) {
-				bt.setText("Status: " + row.getStatus());
+				bt.setText(row.getStatus());
 			}
 		}
 		return v;
