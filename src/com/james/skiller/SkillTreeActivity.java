@@ -45,6 +45,7 @@ public class SkillTreeActivity extends ListActivity {
 
 				Intent intent = new Intent(view.getContext(), TaskActivity.class);
 				intent.putExtra("skill_tree_id", item.getId());
+				intent.putExtra("skill_tree_name", item.getText());
 				startActivity(intent);
 			}
 		});

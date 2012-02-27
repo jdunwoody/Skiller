@@ -20,8 +20,10 @@ import org.json.JSONObject;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -31,6 +33,7 @@ import android.widget.Toast;
 
 import com.james.skiller.helper.DataHelper;
 import com.james.skiller.model.Row;
+import com.james.skiller.model.SkillTree;
 
 public class TaskActivity extends ListActivity {
 	private ProgressDialog progressDialog = null;
@@ -38,23 +41,31 @@ public class TaskActivity extends ListActivity {
 	private RowAdapter adapter;
 	private List<Row> rows = null;
 	private Runnable viewOrders;
-	private int skill_tree_id;
 	private final DataHelper dataHelper;
+	private ListHelper listHelper;
+	private TextView headerRow;
+	private TextView footerRow;
 
 	public TaskActivity() {
 		super();
+		this.listHelper = new ListHelper();
 		this.dataHelper = new DataHelper();
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		final SkillTree skillTree = loadParameters();
+
+		headerRow = listHelper.loadHeaderRow(getApplicationContext(), skillTree);
+		footerRow = listHelper.loadFooterRow(getApplicationContext(), skillTree);
+
+		getListView().addHeaderView(headerRow);
+		getListView().addFooterView(footerRow);
 
 		this.rows = new ArrayList<Row>();
 		this.adapter = new RowAdapter(this, R.layout.row, rows);
 		setListAdapter(this.adapter);
-
-		loadParameters();
 
 		getListView().setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -73,7 +84,7 @@ public class TaskActivity extends ListActivity {
 
 		viewOrders = new Runnable() {
 			public void run() {
-				getData();
+				getData(skillTree);
 			}
 		};
 
@@ -82,16 +93,15 @@ public class TaskActivity extends ListActivity {
 		progressDialog = ProgressDialog.show(this, "Please wait...", "Retrieving data ...", true);
 	}
 
-	private void loadParameters() {
+	private SkillTree loadParameters() {
 		Bundle extras = getIntent().getExtras();
-		if (extras == null) {
-			skill_tree_id = 1;
-			Toast.makeText(getApplicationContext(), "No skill_tree_id supplied. Defaulting to 1", Toast.LENGTH_SHORT).show();
-
-		} else {
-			skill_tree_id = extras.getInt("skill_tree_id");
-			Log.w(LOG_TAG, "Looking up skill_tree: " + skill_tree_id);
+		int id = 1;
+		String name = "none";
+		if (extras != null) {
+			id = extras.getInt("skill_tree_id");
+			name = extras.getString("skill_tree_name");
 		}
+		return new SkillTree(id, name);
 	}
 
 	private Runnable returnRes = new Runnable() {
@@ -106,12 +116,11 @@ public class TaskActivity extends ListActivity {
 		}
 	};
 
-	private void getData() {
+	private void getData(SkillTree skillTree) {
 		try {
-			String url = getResources().getString(R.string.server_url) + "/skill_trees/" + skill_tree_id + "/everything.json";
-
-			// String url = getResources().getString(R.string.server_url) + "/skill_trees.json";
+			String url = getResources().getString(R.string.server_url) + "/skill_trees/" + skillTree.id + "/everything.json";
 			rows = jsonToArray(dataHelper.readData(url));
+			footerRow.setText(rows.size() + " tasks.");
 		} catch (Exception e) {
 			Log.e("BACKGROUND_PROC", e.getMessage());
 		}
