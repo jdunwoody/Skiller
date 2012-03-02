@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.james.skiller.model.Row;
@@ -31,15 +32,24 @@ public class RowAdapter extends ArrayAdapter<Row> {
 		}
 		Row row = rows.get(position);
 		if (row != null) {
-			TextView tt = (TextView) v.findViewById(R.id.toptext);
-			TextView bt = (TextView) v.findViewById(R.id.bottomtext);
-			if (tt != null) {
-				tt.setText(row.getText());
-			}
-			if (bt != null) {
-				bt.setText(row.getStatus());
-			}
+
+			updateRow(row, v);
 		}
 		return v;
+	}
+
+	public static void updateRow(Row row, View v) {
+		ImageView image = (ImageView) v.findViewById(R.id.icon);
+		image.setImageResource(row.getStatusBoolean() ? R.drawable.dramatic : R.drawable.ic_launcher);
+		TextView tt = (TextView) v.findViewById(R.id.toptext);
+		TextView bt = (TextView) v.findViewById(R.id.bottomtext);
+		if (tt != null) {
+			tt.setText(row.getText());
+		}
+		if (bt != null) {
+			bt.setText(row.getStatus());
+		}
+
+		v.invalidate();
 	}
 }
