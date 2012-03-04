@@ -20,25 +20,21 @@ import org.json.JSONObject;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.james.skiller.helper.DataHelper;
+import com.james.skiller.helper.ListHelper;
+import com.james.skiller.helper.RowAdapter;
 import com.james.skiller.model.Row;
 import com.james.skiller.model.SkillTree;
 
 public class TaskActivity extends ListActivity {
 	private ProgressDialog progressDialog = null;
-	private static final String LOG_TAG = TaskActivity.class.toString();
 	private RowAdapter adapter;
 	private List<Row> rows = null;
 	private Runnable viewOrders;
@@ -72,20 +68,12 @@ public class TaskActivity extends ListActivity {
 		getListView().setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Row item = (Row) getListView().getItemAtPosition(position);
-
-				RowAdapter.updateRow(item, view);
-				//
-				// item.setStatus(toggleStatus(item));
-				//
-				// LinearLayout textView = (LinearLayout) view;
-				// TextView bottomView = (TextView) view.findViewById(R.id.bottomtext);
-				//
-				// ImageView icon_image = (ImageView) view.findViewById(R.id.icon);
-				// icon_image.setImageResource(item.getStatusBoolean() ? R.drawable.dramatic : R.drawable.ic_launcher);
-				//
-				// bottomView.setText(item.getStatusBoolean() ? "" : "Incomplete");
-				// // updateColour(item, bottomView);
-				// textView.invalidate();
+				if (item != null) {
+					Log.i(SkillTreeActivity.LOG_TAG, "Changing status. Before: " + item.getStatus());
+					toggleStatus(item);
+					Log.i(SkillTreeActivity.LOG_TAG, "Changing status. After: " + item.getStatus());
+					RowAdapter.updateRow(item, view);
+				}
 			}
 		});
 
@@ -125,11 +113,14 @@ public class TaskActivity extends ListActivity {
 
 	private void getData(SkillTree skillTree) {
 		try {
-			String url = getResources().getString(R.string.server_url) + "/skill_trees/" + skillTree.id + "/everything.json";
-			rows = jsonToArray(dataHelper.readData(url));
-			footerRow.setText(rows.size() + " tasks.");
+			String url = getResources().getString(R.string.server_url) + "skill_trees/" + skillTree.id + "/tasks.json";
+			String data = dataHelper.readData(url);
+			Log.i(SkillTreeActivity.LOG_TAG, "Data from tasks requests: " + data);
+			rows = jsonToArray(data);
+			// throws "only the original thread exception. (http://stackoverflow.com/questions/6622898/display-charecters-in-textview-with-time-delay-android)
+			// footerRow.setText(rows.size() + " tasks.");
 		} catch (Exception e) {
-			Log.e("BACKGROUND_PROC", e.getMessage());
+			Log.e(SkillTreeActivity.LOG_TAG, e.getMessage());
 		}
 		runOnUiThread(returnRes);
 	}
@@ -137,29 +128,29 @@ public class TaskActivity extends ListActivity {
 	private List<Row> jsonToArray(String data) {
 		List<Row> results = new ArrayList<Row>();
 		try {
-			JSONObject skillTree = new JSONObject(data);
-			JSONArray levels = skillTree.getJSONArray("levels");
+			// JSONObject skillTree = new JSONObject(data);
+			// JSONArray levels = skillTree.getJSONArray("levels");
+			//
+			// for (int i = 0; i < levels.length(); i++) {
+			// JSONObject level = levels.getJSONObject(i);
+			// String levelName = level.getString("name");
 
-			for (int i = 0; i < levels.length(); i++) {
-				JSONObject level = levels.getJSONObject(i);
-				String levelName = level.getString("name");
+			JSONArray tasks = new JSONArray(data);
 
-				JSONArray tasks = level.getJSONArray("tasks");
+			for (int j = 0; j < tasks.length(); j++) {
+				JSONObject task = tasks.getJSONObject(j);
 
-				for (int j = 0; j < tasks.length(); j++) {
-					JSONObject task = tasks.getJSONObject(j);
+				String taskName = task.getString("name");
+				int task_id = task.getInt("id");
+				// String skillTreeName = skillTree.getString("name");
+				// String url = getResources().getString(R.string.server_url) + "tasks/" + task_id + "/toggle_complete.json";
+				boolean status = task.getBoolean("status");
 
-					String taskName = task.getString("name");
-					int task_id = task.getInt("id");
-					String skillTreeName = skillTree.getString("name");
-					String url = getResources().getString(R.string.server_url) + "/tasks/" + task_id + "/toggle_complete.json";
-					boolean taskStatus = task.getString("status") == "true";
-
-					results.add(new Row(task_id, taskName, taskStatus));
-				}
+				results.add(new Row(task_id, taskName, status));
 			}
+			// }
 		} catch (Exception e) {
-			Log.e(SkillTreeActivity.class.getName(), e.getMessage());
+			Log.e(SkillTreeActivity.LOG_TAG, e.getMessage());
 			e.printStackTrace();
 		}
 		return results;
@@ -183,7 +174,7 @@ public class TaskActivity extends ListActivity {
 					builder.append(line);
 				}
 			} else {
-				Log.e(LOG_TAG, "Failed to download file");
+				Log.e(SkillTreeActivity.LOG_TAG, "Failed to download file");
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -193,7 +184,9 @@ public class TaskActivity extends ListActivity {
 		return builder.toString();
 	}
 
-	public String toggleStatus(Row item) {
+	private void toggleStatus(Row item) {
+		Log.i(SkillTreeActivity.LOG_TAG, "Toggling status for " + item);
+
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
 
@@ -213,17 +206,19 @@ public class TaskActivity extends ListActivity {
 					builder.append(line);
 				}
 			} else {
-				Log.e(LOG_TAG, "Failed to download file");
+				Log.e(SkillTreeActivity.LOG_TAG, "Failed to download file");
 			}
 		} catch (Exception e) {
-			Log.e(LOG_TAG, e.getMessage());
+			Log.e(SkillTreeActivity.LOG_TAG, e.getMessage());
 			e.printStackTrace();
 		}
-		return builder.toString();
+		Log.i(SkillTreeActivity.LOG_TAG,
+				"About to change item status from " + item.getStatus() + " to new value " + builder.toString() + " is: " + Boolean.parseBoolean(builder.toString()));
+		item.setStatus(Boolean.parseBoolean(builder.toString()));
 	}
 
 	private void updateColour(Row item, TextView textView) {
-		int newColour = item.getStatusBoolean() ? R.color.light_cream : R.color.faded;
+		int newColour = item.getStatus() ? R.color.light_cream : R.color.faded;
 		textView.setTextColor(newColour);
 	}
 }

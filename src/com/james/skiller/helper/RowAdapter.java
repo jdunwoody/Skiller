@@ -1,4 +1,4 @@
-package com.james.skiller;
+package com.james.skiller.helper;
 
 import java.util.List;
 
@@ -10,10 +10,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.james.skiller.R;
+import com.james.skiller.R.drawable;
+import com.james.skiller.R.id;
+import com.james.skiller.R.layout;
 import com.james.skiller.model.Row;
 
 public class RowAdapter extends ArrayAdapter<Row> {
-
 	private List<Row> rows;
 	private Context context;
 
@@ -32,7 +35,6 @@ public class RowAdapter extends ArrayAdapter<Row> {
 		}
 		Row row = rows.get(position);
 		if (row != null) {
-
 			updateRow(row, v);
 		}
 		return v;
@@ -40,16 +42,16 @@ public class RowAdapter extends ArrayAdapter<Row> {
 
 	public static void updateRow(Row row, View v) {
 		ImageView image = (ImageView) v.findViewById(R.id.icon);
-		image.setImageResource(row.getStatusBoolean() ? R.drawable.dramatic : R.drawable.ic_launcher);
+		image.setImageResource(row.getStatus() ? R.drawable.accept_item : R.drawable.done_item);
 		TextView tt = (TextView) v.findViewById(R.id.toptext);
-		TextView bt = (TextView) v.findViewById(R.id.bottomtext);
 		if (tt != null) {
 			tt.setText(row.getText());
 		}
-		if (bt != null) {
-			bt.setText(row.getStatus());
-		}
+		// TextView bt = (TextView) v.findViewById(R.id.bottomtext);
+		// if (bt != null) {
+		// bt.setText(String.valueOf(row.getStatus()));
+		// }
 
-		v.invalidate();
+		v.postInvalidate();
 	}
 }

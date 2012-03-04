@@ -1,9 +1,11 @@
-package com.james.skiller;
+package com.james.skiller.helper;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.TextView;
 
+import com.james.skiller.R;
+import com.james.skiller.R.layout;
 import com.james.skiller.model.SkillTree;
 
 public class ListHelper {

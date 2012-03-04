@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">Skiller</string>
     <string name="server_url">http://glowing-sunset-9969.herokuapp.com/</string>
+    <!-- <string name="server_url">http://10.1.1.9:3000/</string> -->
     <string name="main_no_items">No orders to display</string>
     <string name="header_text">Header</string>
     <string name="footer_text">Footer</string>
+
 </resources>

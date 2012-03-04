@@ -8,8 +8,7 @@
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_marginRight="6dip"
-        android:src="@drawable/ic_launcher" />
+        android:layout_marginRight="6dip" />
 
     <LinearLayout
         android:layout_width="0dip"
@@ -24,13 +23,15 @@
             android:layout_weight="2"
             android:gravity="center_vertical" />
 
-        <TextView
+        <!--
+             <TextView
             android:id="@+id/bottomtext"
             android:layout_width="fill_parent"
             android:layout_height="0dip"
             android:layout_weight="1"
             android:ellipsize="marquee"
             android:singleLine="true" />
+        -->
     </LinearLayout>
 
 </LinearLayout>

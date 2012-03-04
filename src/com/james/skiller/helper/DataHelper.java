@@ -13,10 +13,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.james.skiller.SkillTreeActivity;
+
 import android.util.Log;
 
 public class DataHelper {
-	private static final String LOG_TAG = DataHelper.class.toString();
 
 	public String readData(String url) {
 		StringBuilder builder = new StringBuilder();
@@ -36,7 +37,7 @@ public class DataHelper {
 					builder.append(line);
 				}
 			} else {
-				Log.e(LOG_TAG, "Failed to download file");
+				Log.e(SkillTreeActivity.LOG_TAG, "Failed to download file");
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
