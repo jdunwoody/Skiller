@@ -16,18 +16,18 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.james.skiller.helper.DataHelper;
-import com.james.skiller.helper.SkillRowAdapter;
-import com.james.skiller.model.SkillRow;
+import com.james.skiller.helper.LevelRowAdapter;
+import com.james.skiller.model.LevelRow;
+import com.james.skiller.model.SkillTree;
 
-public class SkillTreeActivity extends ListActivity {
+public class LevelActivity extends ListActivity {
 	private ProgressDialog progressDialog = null;
-	public static final String LOG_TAG = "Skiller";
-	private SkillRowAdapter adapter;
-	private List<SkillRow> rows = null;
+	private LevelRowAdapter adapter;
+	private List<LevelRow> rows = null;
 	private Runnable viewOrders;
 	private final DataHelper dataHelper;
 
-	public SkillTreeActivity() {
+	public LevelActivity() {
 		super();
 		this.dataHelper = new DataHelper();
 	}
@@ -35,18 +35,19 @@ public class SkillTreeActivity extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		final SkillTree skillTree = loadParameters();
 
-		this.rows = new ArrayList<SkillRow>();
-		this.adapter = new SkillRowAdapter(this, R.layout.row, rows);
+		this.rows = new ArrayList<LevelRow>();
+		this.adapter = new LevelRowAdapter(this, R.layout.row, rows);
 		setListAdapter(this.adapter);
 
 		getListView().setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				SkillRow item = (SkillRow) getListAdapter().getItem(position);
+				LevelRow item = (LevelRow) getListAdapter().getItem(position);
 				if (item != null) {
-					Intent intent = new Intent(view.getContext(), LevelActivity.class);
-					intent.putExtra("skill_tree_id", item.getId());
-					intent.putExtra("skill_tree_name", item.getName());
+					Intent intent = new Intent(view.getContext(), TaskActivity.class);
+					intent.putExtra("level_id", item.getId());
+					intent.putExtra("level_name", item.getName());
 					startActivity(intent);
 				}
 			}
@@ -54,13 +55,24 @@ public class SkillTreeActivity extends ListActivity {
 
 		viewOrders = new Runnable() {
 			public void run() {
-				getData();
+				getData(skillTree);
 			}
 		};
 
 		Thread thread = new Thread(null, viewOrders, "MagentoBackground");
 		thread.start();
 		progressDialog = ProgressDialog.show(this, "Please wait...", "Retrieving data ...", true);
+	}
+
+	private SkillTree loadParameters() {
+		Bundle extras = getIntent().getExtras();
+		int id = 1;
+		String name = "none";
+		if (extras != null) {
+			id = extras.getInt("skill_tree_id");
+			name = extras.getString("skill_tree_name");
+		}
+		return new SkillTree(id, name);
 	}
 
 	private Runnable returnRes = new Runnable() {
@@ -75,28 +87,28 @@ public class SkillTreeActivity extends ListActivity {
 		}
 	};
 
-	private void getData() {
+	private void getData(SkillTree skillTree) {
 		try {
-			String url = getResources().getString(R.string.server_url) + "skill_trees.json";
+			String url = getResources().getString(R.string.server_url) + "skill_trees/" + skillTree.id + "/levels.json";
 			String data = dataHelper.readData(url);
 			rows = jsonToArray(data);
 		} catch (Exception e) {
-			Log.e(LOG_TAG, e.getMessage());
+			Log.e(SkillTreeActivity.LOG_TAG, e.getMessage());
 		}
 		runOnUiThread(returnRes);
 	}
 
-	private List<SkillRow> jsonToArray(String data) {
-		List<SkillRow> results = new ArrayList<SkillRow>();
+	private List<LevelRow> jsonToArray(String data) {
+		List<LevelRow> results = new ArrayList<LevelRow>();
 		try {
 			JSONArray jsonArray = new JSONArray(data);
 			for (int i = 0; i < jsonArray.length(); i++) {
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
-				SkillRow row = new SkillRow(jsonObject.getInt("id"), jsonObject.getString("name"), jsonObject.getDouble("score"));
+				LevelRow row = new LevelRow(jsonObject.getInt("id"), jsonObject.getString("name"), jsonObject.getDouble("score"));
 				results.add(row);
 			}
 		} catch (Exception e) {
-			Log.e(LOG_TAG, e.getMessage());
+			Log.e(SkillTreeActivity.LOG_TAG, e.getMessage());
 			e.printStackTrace();
 		}
 		return results;

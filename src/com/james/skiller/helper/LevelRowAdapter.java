@@ -11,13 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.james.skiller.R;
-import com.james.skiller.model.Row;
+import com.james.skiller.model.LevelRow;
 
-public class RowAdapter extends ArrayAdapter<Row> {
-	private List<Row> rows;
+public class LevelRowAdapter extends ArrayAdapter<LevelRow> {
+	private List<LevelRow> rows;
 	private Context context;
 
-	public RowAdapter(Context context, int textViewResourceId, List<Row> rows) {
+	public LevelRowAdapter(Context context, int textViewResourceId, List<LevelRow> rows) {
 		super(context, textViewResourceId, rows);
 		this.rows = rows;
 		this.context = context;
@@ -30,25 +30,34 @@ public class RowAdapter extends ArrayAdapter<Row> {
 			LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = vi.inflate(R.layout.row, null);
 		}
-		Row row = rows.get(position);
+		LevelRow row = rows.get(position);
 		if (row != null) {
 			updateRow(row, v);
 		}
 		return v;
 	}
 
-	public static void updateRow(Row row, View v) {
+	public static void updateRow(LevelRow row, View v) {
 		ImageView image = (ImageView) v.findViewById(R.id.icon);
-		image.setImageResource(row.getStatus() ? R.drawable.accept_item : R.drawable.done_item);
+		image.setImageResource(R.drawable.promotion);
 		TextView tt = (TextView) v.findViewById(R.id.toptext);
 		if (tt != null) {
-			tt.setText(row.getText());
+			tt.setText(row.getName());
 		}
-		// TextView bt = (TextView) v.findViewById(R.id.bottomtext);
-		// if (bt != null) {
-		// bt.setText(String.valueOf(row.getStatus()));
-		// }
+
+		// ImageView status = (ImageView) v.findViewById(R.id.status);
+		// status.setImageResource(renderScore(row.getScore()));
 
 		v.postInvalidate();
+	}
+
+	private static int renderScore(double score) {
+		if (score < 0.3) {
+			return R.drawable.high_score;
+		} else if (score < 0.6) {
+			return R.drawable.medium_score;
+		} else {
+			return R.drawable.low_score;
+		}
 	}
 }

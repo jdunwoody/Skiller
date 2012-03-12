@@ -4,5 +4,6 @@
     <color name="faded">#FF0000</color> <!-- #998A73</color> -->
     <color name="light_cream">#00FF00</color> <!-- #E6D0AC</color> -->
     <color name="dark_brown">#0000FF</color> <!-- #524021</color> -->
+    <color name="black">#000000</color>
 
 </resources>

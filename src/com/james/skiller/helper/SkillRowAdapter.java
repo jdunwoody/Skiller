@@ -3,9 +3,6 @@ package com.james.skiller.helper;
 import java.util.List;
 
 import com.james.skiller.R;
-import com.james.skiller.R.drawable;
-import com.james.skiller.R.id;
-import com.james.skiller.R.layout;
 import com.james.skiller.model.SkillRow;
 
 import android.content.Context;

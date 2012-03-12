@@ -30,8 +30,8 @@ import android.widget.TextView;
 import com.james.skiller.helper.DataHelper;
 import com.james.skiller.helper.ListHelper;
 import com.james.skiller.helper.RowAdapter;
+import com.james.skiller.model.Level;
 import com.james.skiller.model.Row;
-import com.james.skiller.model.SkillTree;
 
 public class TaskActivity extends ListActivity {
 	private ProgressDialog progressDialog = null;
@@ -53,10 +53,10 @@ public class TaskActivity extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		final SkillTree skillTree = loadParameters();
+		final Level level = loadParameters();
 
-		headerRow = listHelper.loadHeaderRow(getApplicationContext(), skillTree);
-		footerRow = listHelper.loadFooterRow(getApplicationContext(), skillTree);
+		headerRow = listHelper.loadHeaderRow(getApplicationContext(), level);
+		footerRow = listHelper.loadFooterRow(getApplicationContext(), level);
 
 		getListView().addHeaderView(headerRow);
 		getListView().addFooterView(footerRow);
@@ -79,7 +79,7 @@ public class TaskActivity extends ListActivity {
 
 		viewOrders = new Runnable() {
 			public void run() {
-				getData(skillTree);
+				getData(level);
 			}
 		};
 
@@ -88,15 +88,15 @@ public class TaskActivity extends ListActivity {
 		progressDialog = ProgressDialog.show(this, "Please wait...", "Retrieving data ...", true);
 	}
 
-	private SkillTree loadParameters() {
+	private Level loadParameters() {
 		Bundle extras = getIntent().getExtras();
 		int id = 1;
 		String name = "none";
 		if (extras != null) {
-			id = extras.getInt("skill_tree_id");
-			name = extras.getString("skill_tree_name");
+			id = extras.getInt("level_id");
+			name = extras.getString("level_name");
 		}
-		return new SkillTree(id, name);
+		return new Level(id, name);
 	}
 
 	private Runnable returnRes = new Runnable() {
@@ -111,9 +111,9 @@ public class TaskActivity extends ListActivity {
 		}
 	};
 
-	private void getData(SkillTree skillTree) {
+	private void getData(Level level) {
 		try {
-			String url = getResources().getString(R.string.server_url) + "skill_trees/" + skillTree.id + "/tasks.json";
+			String url = getResources().getString(R.string.server_url) + "levels/" + level.id + "/tasks.json";
 			String data = dataHelper.readData(url);
 			Log.i(SkillTreeActivity.LOG_TAG, "Data from tasks requests: " + data);
 			rows = jsonToArray(data);

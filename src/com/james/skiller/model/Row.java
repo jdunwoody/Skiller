@@ -21,6 +21,7 @@ public class Row {
 		return text;
 	}
 
+	@Override
 	public String toString() {
 		return text + "[" + status + "]";
 	}
