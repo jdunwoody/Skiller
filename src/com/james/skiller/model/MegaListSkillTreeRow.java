@@ -6,10 +6,12 @@ import java.util.List;
 public class MegaListSkillTreeRow extends MegaListRow {
 	private final double score;
 	private List<MegaListTaskRow> tasks;
+	private boolean visible;
 
 	public MegaListSkillTreeRow(int id, String name, double score) {
 		super(id, name);
 		this.score = score;
+		this.visible = true;
 		this.tasks = new ArrayList<MegaListTaskRow>();
 	}
 
@@ -24,5 +26,13 @@ public class MegaListSkillTreeRow extends MegaListRow {
 	@Override
 	public List<? extends MegaListRow> getChildren() {
 		return tasks;
+	}
+
+	public boolean getStatus() {
+		return false;
+	}
+
+	public void toggle_hidden() {
+		this.visible = !visible;
 	}
 }

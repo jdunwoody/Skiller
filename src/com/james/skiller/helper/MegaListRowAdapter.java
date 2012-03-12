@@ -2,10 +2,6 @@ package com.james.skiller.helper;
 
 import java.util.List;
 
-import com.james.skiller.R;
-import com.james.skiller.model.MegaListRow;
-import com.james.skiller.model.MegaListSkillTreeRow;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.james.skiller.R;
+import com.james.skiller.model.MegaListRow;
+import com.james.skiller.model.MegaListSkillTreeRow;
 
 public class MegaListRowAdapter extends ArrayAdapter<MegaListRow> {
 
@@ -28,9 +28,11 @@ public class MegaListRowAdapter extends ArrayAdapter<MegaListRow> {
 			v = vi.inflate(R.layout.row, null);
 		}
 		MegaListRow row = (MegaListRow) getItem(position);
+		// if (row.getClass() != MegaListTaskRow.class) {
 		if (row != null) {
 			updateRow(row, v);
 		}
+		// }
 		return v;
 	}
 
@@ -41,7 +43,7 @@ public class MegaListRowAdapter extends ArrayAdapter<MegaListRow> {
 
 		TextView tt = (TextView) v.findViewById(R.id.toptext);
 		if (tt != null) {
-			tt.setText(row.getName());
+			tt.setText(row.getName() + " " + row.getStatus());
 		}
 		// TextView bt = (TextView) v.findViewById(R.id.bottomtext);
 		// if (bt != null) {
@@ -49,5 +51,12 @@ public class MegaListRowAdapter extends ArrayAdapter<MegaListRow> {
 		// }
 
 		v.postInvalidate();
+	}
+
+	public void add_row(MegaListRow row) {
+		add(row);
+		for (MegaListRow child : row.getChildren()) {
+			add(child);
+		}
 	}
 }

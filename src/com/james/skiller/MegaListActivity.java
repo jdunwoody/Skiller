@@ -8,12 +8,13 @@ import org.json.JSONObject;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.james.skiller.helper.DataHelper;
 import com.james.skiller.helper.MegaListRowAdapter;
@@ -44,13 +45,17 @@ public class MegaListActivity extends ListActivity {
 
 		getListView().setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				// MegaListRow item = (MegaListRow) getListAdapter().getItem(position);
-				// if (item != null) {
-				// Intent intent = new Intent(view.getContext(), LevelActivity.class);
-				// intent.putExtra("skill_tree_id", item.getId());
-				// intent.putExtra("skill_tree_name", item.getName());
-				// startActivity(intent);
-				// }
+				MegaListRow item = (MegaListRow) getListAdapter().getItem(position);
+				if (item != null) {
+					// if (item.getClass() == MegaListTaskRow.class) {
+					TaskToggler.toggleStatus(getResources(), (MegaListTaskRow) item);
+					TextView textView = (TextView) ((LinearLayout) view).findViewById(R.id.toptext);
+					textView.setText(item.getName() + " " + item.getStatus());
+					view.invalidate();
+					// } else if (item.getClass() == MegaListSkillTreeRow.class) {
+					// ((MegaListSkillTreeRow)item).toggle_hidden();
+					// }
+				}
 			}
 		});
 
@@ -82,10 +87,7 @@ public class MegaListActivity extends ListActivity {
 				adapter.notifyDataSetChanged();
 				for (int i = 0; i < rows.size(); i++) {
 					MegaListRow row = rows.get(i);
-					adapter.add(row);
-					for (MegaListRow child : row.getChildren()) {
-						adapter.add(child);
-					}
+					adapter.add_row(row);
 				}
 			}
 			progressDialog.dismiss();

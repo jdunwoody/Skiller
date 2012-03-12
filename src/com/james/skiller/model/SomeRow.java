@@ -1,17 +1,17 @@
 package com.james.skiller.model;
 
-public class Row {
+public class SomeRow {
 	private final String text;
 	private boolean status;
 	private final int id;
 
-	public Row(int id, String text, String status) {
+	public SomeRow(int id, String text, String status) {
 		this.text = text;
 		this.setStatus(status);
 		this.id = id;
 	}
 
-	public Row(int id, String text, boolean status) {
+	public SomeRow(int id, String text, boolean status) {
 		this.text = text;
 		this.setStatus(status);
 		this.id = id;

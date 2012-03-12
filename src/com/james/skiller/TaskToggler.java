@@ -1,31 +1,33 @@
-package com.james.skiller.helper;
+package com.james.skiller;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.content.res.Resources;
 import android.util.Log;
 
-import com.james.skiller.Logger;
+import com.james.skiller.model.MegaListTaskRow;
 
-public class DataHelper {
+public class TaskToggler {
+	public static void toggleStatus(Resources resources, MegaListTaskRow item) {
+		Log.i(Logger.LOG_TAG, "Toggling status for " + item);
 
-	public String readData(String url) {
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
 
-		HttpGet httpGet = new HttpGet(url);
+		String url = resources.getString(R.string.server_url) + "tasks/" + item.getId() + "/toggle_complete.json";
+
+		HttpPut httpPut = new HttpPut(url);
 		try {
-			HttpResponse response = client.execute(httpGet);
+			HttpResponse response = client.execute(httpPut);
 			StatusLine statusLine = response.getStatusLine();
 			int statusCode = statusLine.getStatusCode();
 			if (statusCode == 200) {
@@ -39,11 +41,11 @@ public class DataHelper {
 			} else {
 				Log.e(Logger.LOG_TAG, "Failed to download file");
 			}
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
+			Log.e(Logger.LOG_TAG, e.getMessage());
 			e.printStackTrace();
 		}
-		return builder.toString();
+		Log.i(Logger.LOG_TAG, "About to change item status from " + item.getStatus() + " to new value " + builder.toString() + " is: " + Boolean.parseBoolean(builder.toString()));
+		item.setStatus(Boolean.parseBoolean(builder.toString()));
 	}
 }

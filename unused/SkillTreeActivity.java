@@ -21,7 +21,6 @@ import com.james.skiller.model.SkillRow;
 
 public class SkillTreeActivity extends ListActivity {
 	private ProgressDialog progressDialog = null;
-	public static final String LOG_TAG = "Skiller";
 	private SkillRowAdapter adapter;
 	private List<SkillRow> rows = null;
 	private Runnable viewOrders;

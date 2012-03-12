@@ -31,12 +31,12 @@ import com.james.skiller.helper.DataHelper;
 import com.james.skiller.helper.ListHelper;
 import com.james.skiller.helper.RowAdapter;
 import com.james.skiller.model.Level;
-import com.james.skiller.model.Row;
+import com.james.skiller.model.SomeRow;
 
 public class TaskActivity extends ListActivity {
 	private ProgressDialog progressDialog = null;
 	private RowAdapter adapter;
-	private List<Row> rows = null;
+	private List<SomeRow> rows = null;
 	private Runnable viewOrders;
 	private final DataHelper dataHelper;
 	private ListHelper listHelper;
@@ -61,16 +61,16 @@ public class TaskActivity extends ListActivity {
 		getListView().addHeaderView(headerRow);
 		getListView().addFooterView(footerRow);
 
-		this.rows = new ArrayList<Row>();
+		this.rows = new ArrayList<SomeRow>();
 		this.adapter = new RowAdapter(this, R.layout.row, rows);
 		setListAdapter(this.adapter);
 
 		getListView().setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Row item = (Row) getListView().getItemAtPosition(position);
+				SomeRow item = (SomeRow) getListView().getItemAtPosition(position);
 				if (item != null) {
 					Log.i(SkillTreeActivity.LOG_TAG, "Changing status. Before: " + item.getStatus());
-					toggleStatus(item);
+					// TaskToggler.toggleStatus(getResources(), item);
 					Log.i(SkillTreeActivity.LOG_TAG, "Changing status. After: " + item.getStatus());
 					RowAdapter.updateRow(item, view);
 				}
@@ -125,8 +125,8 @@ public class TaskActivity extends ListActivity {
 		runOnUiThread(returnRes);
 	}
 
-	private List<Row> jsonToArray(String data) {
-		List<Row> results = new ArrayList<Row>();
+	private List<SomeRow> jsonToArray(String data) {
+		List<SomeRow> results = new ArrayList<SomeRow>();
 		try {
 			// JSONObject skillTree = new JSONObject(data);
 			// JSONArray levels = skillTree.getJSONArray("levels");
@@ -146,7 +146,7 @@ public class TaskActivity extends ListActivity {
 				// String url = getResources().getString(R.string.server_url) + "tasks/" + task_id + "/toggle_complete.json";
 				boolean status = task.getBoolean("status");
 
-				results.add(new Row(task_id, taskName, status));
+				results.add(new SomeRow(task_id, taskName, status));
 			}
 			// }
 		} catch (Exception e) {
@@ -184,40 +184,7 @@ public class TaskActivity extends ListActivity {
 		return builder.toString();
 	}
 
-	private void toggleStatus(Row item) {
-		Log.i(SkillTreeActivity.LOG_TAG, "Toggling status for " + item);
-
-		StringBuilder builder = new StringBuilder();
-		HttpClient client = new DefaultHttpClient();
-
-		String url = getResources().getString(R.string.server_url) + "tasks/" + item.getId() + "/toggle_complete.json";
-
-		HttpPut httpPut = new HttpPut(url);
-		try {
-			HttpResponse response = client.execute(httpPut);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200) {
-				HttpEntity entity = response.getEntity();
-				InputStream content = entity.getContent();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-				String line;
-				while ((line = reader.readLine()) != null) {
-					builder.append(line);
-				}
-			} else {
-				Log.e(SkillTreeActivity.LOG_TAG, "Failed to download file");
-			}
-		} catch (Exception e) {
-			Log.e(SkillTreeActivity.LOG_TAG, e.getMessage());
-			e.printStackTrace();
-		}
-		Log.i(SkillTreeActivity.LOG_TAG,
-				"About to change item status from " + item.getStatus() + " to new value " + builder.toString() + " is: " + Boolean.parseBoolean(builder.toString()));
-		item.setStatus(Boolean.parseBoolean(builder.toString()));
-	}
-
-	private void updateColour(Row item, TextView textView) {
+	private void updateColour(SomeRow item, TextView textView) {
 		int newColour = item.getStatus() ? R.color.light_cream : R.color.faded;
 		textView.setTextColor(newColour);
 	}

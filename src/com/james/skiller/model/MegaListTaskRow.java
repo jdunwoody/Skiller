@@ -4,15 +4,19 @@ import java.util.Collections;
 import java.util.List;
 
 public class MegaListTaskRow extends MegaListRow {
-	private final boolean status;
+	private boolean status;
 
 	public MegaListTaskRow(int id, String name, boolean status) {
 		super(id, name);
 		this.status = status;
 	}
 
-	public boolean status() {
+	public boolean getStatus() {
 		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 
 	@Override

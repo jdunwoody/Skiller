@@ -11,13 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.james.skiller.R;
-import com.james.skiller.model.Row;
+import com.james.skiller.model.SomeRow;
 
-public class RowAdapter extends ArrayAdapter<Row> {
-	private List<Row> rows;
+public class RowAdapter extends ArrayAdapter<SomeRow> {
+	private List<SomeRow> rows;
 	private Context context;
 
-	public RowAdapter(Context context, int textViewResourceId, List<Row> rows) {
+	public RowAdapter(Context context, int textViewResourceId, List<SomeRow> rows) {
 		super(context, textViewResourceId, rows);
 		this.rows = rows;
 		this.context = context;
@@ -30,14 +30,14 @@ public class RowAdapter extends ArrayAdapter<Row> {
 			LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = vi.inflate(R.layout.row, null);
 		}
-		Row row = rows.get(position);
+		SomeRow row = rows.get(position);
 		if (row != null) {
 			updateRow(row, v);
 		}
 		return v;
 	}
 
-	public static void updateRow(Row row, View v) {
+	public static void updateRow(SomeRow row, View v) {
 		ImageView image = (ImageView) v.findViewById(R.id.icon);
 		image.setImageResource(row.getStatus() ? R.drawable.accept_item : R.drawable.done_item);
 		TextView tt = (TextView) v.findViewById(R.id.toptext);

@@ -2,7 +2,9 @@ package com.james.skiller.model;
 
 import java.util.List;
 
-public abstract class MegaListRow {
+import com.james.skiller.Row;
+
+public abstract class MegaListRow implements Row{
 	private final int id;
 	private final String name;
 
@@ -20,4 +22,5 @@ public abstract class MegaListRow {
 	}
 
 	public abstract List<? extends MegaListRow> getChildren();
+
 }
