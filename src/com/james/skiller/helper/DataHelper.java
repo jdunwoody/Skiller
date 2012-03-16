@@ -15,7 +15,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.util.Log;
 
-import com.james.skiller.Logger;
 
 public class DataHelper {
 

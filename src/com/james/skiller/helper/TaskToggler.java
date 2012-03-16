@@ -1,4 +1,4 @@
-package com.james.skiller;
+package com.james.skiller.helper;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -14,6 +14,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.content.res.Resources;
 import android.util.Log;
 
+import com.james.skiller.R;
 import com.james.skiller.model.MegaListTaskRow;
 
 public class TaskToggler {

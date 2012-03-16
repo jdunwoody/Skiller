@@ -3,9 +3,13 @@ package com.james.skiller.helper;
 import java.util.List;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,19 +25,30 @@ public class MegaListRowAdapter extends ArrayAdapter<MegaListRow> {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View v = convertView;
-		if (v == null) {
-			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(R.layout.row, null);
-		}
+	public View getView(int position, View rowView, ViewGroup parent) {
 		MegaListRow row = (MegaListRow) getItem(position);
+		if (rowView == null) {
+			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			rowView = vi.inflate(R.layout.row, null);
+			TextView textView = (TextView) rowView.findViewById(R.id.toptext);
+			textView.setTextColor(calculateTextColour(row));
+			// LayoutAnimationController hyperspaceJumpAnimation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.row_transition);
+			// v.startAnimation(hyperspaceJumpAnimation);
+
+			Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.row_transition);
+			rowView.startAnimation(animation);
+
+		}
 		// if (row.getClass() != MegaListTaskRow.class) {
 		if (row != null) {
-			updateRow(row, v);
+			updateRow(row, rowView);
 		}
 		// }
-		return v;
+		return rowView;
+	}
+
+	private int calculateTextColour(MegaListRow row) {
+		return row.getStatus() ? R.color.black : R.color.faded;
 	}
 
 	public static void updateRow(MegaListRow row, View v) {

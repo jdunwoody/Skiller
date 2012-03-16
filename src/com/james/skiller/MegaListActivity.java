@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.james.skiller.helper.DataHelper;
 import com.james.skiller.helper.MegaListRowAdapter;
+import com.james.skiller.helper.TaskToggler;
 import com.james.skiller.model.MegaListRow;
 import com.james.skiller.model.MegaListSkillTreeRow;
 import com.james.skiller.model.MegaListTaskRow;
@@ -47,14 +48,15 @@ public class MegaListActivity extends ListActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				MegaListRow item = (MegaListRow) getListAdapter().getItem(position);
 				if (item != null) {
-					// if (item.getClass() == MegaListTaskRow.class) {
-					TaskToggler.toggleStatus(getResources(), (MegaListTaskRow) item);
-					TextView textView = (TextView) ((LinearLayout) view).findViewById(R.id.toptext);
-					textView.setText(item.getName() + " " + item.getStatus());
-					view.invalidate();
-					// } else if (item.getClass() == MegaListSkillTreeRow.class) {
-					// ((MegaListSkillTreeRow)item).toggle_hidden();
-					// }
+					if (item.getClass() == MegaListTaskRow.class) {
+						TaskToggler.toggleStatus(getResources(), (MegaListTaskRow) item);
+						TextView textView = (TextView) ((LinearLayout) view).findViewById(R.id.toptext);
+						textView.setText(item.getName() + " " + item.getStatus());
+//						textView.setTextColor(R.color.faded);
+						view.invalidate();
+					} else if (item.getClass() == MegaListSkillTreeRow.class) {
+						((MegaListSkillTreeRow) item).toggle_hidden();
+					}
 				}
 			}
 		});

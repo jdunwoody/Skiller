@@ -1,4 +1,4 @@
-package com.james.skiller;
+package com.james.skiller.model;
 
 public interface Row {
 	String getName();
