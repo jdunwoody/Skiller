@@ -5,7 +5,7 @@ import java.util.List;
 
 public class MegaListSkillTreeRow extends MegaListRow {
 	private final double score;
-	private List<MegaListTaskRow> tasks;
+	private final List<MegaListTaskRow> tasks;
 	private boolean visible;
 
 	public MegaListSkillTreeRow(int id, String name, double score) {
@@ -13,10 +13,6 @@ public class MegaListSkillTreeRow extends MegaListRow {
 		this.score = score;
 		this.visible = true;
 		this.tasks = new ArrayList<MegaListTaskRow>();
-	}
-
-	public double score() {
-		return score;
 	}
 
 	public void add(MegaListTaskRow task) {
@@ -30,6 +26,10 @@ public class MegaListSkillTreeRow extends MegaListRow {
 
 	public boolean getStatus() {
 		return false;
+	}
+
+	public double score() {
+		return score;
 	}
 
 	public void toggle_hidden() {

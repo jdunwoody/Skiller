@@ -11,16 +11,16 @@ public class MegaListTaskRow extends MegaListRow {
 		this.status = status;
 	}
 
+	@Override
+	public List<MegaListRow> getChildren() {
+		return Collections.emptyList();
+	}
+
 	public boolean getStatus() {
 		return status;
 	}
 
 	public void setStatus(boolean status) {
 		this.status = status;
-	}
-
-	@Override
-	public List<MegaListRow> getChildren() {
-		return Collections.emptyList();
 	}
 }

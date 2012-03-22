@@ -24,12 +24,28 @@ import com.james.skiller.model.MegaListSkillTreeRow;
 import com.james.skiller.model.MegaListTaskRow;
 
 public class MegaListActivity extends ListActivity {
-	private ProgressDialog progressDialog = null;
 	public static final String LOG_TAG = "Skiller";
 	private MegaListRowAdapter adapter;
-	private List<MegaListRow> rows = null;
-	private Runnable viewOrders;
 	private final DataHelper dataHelper;
+	private ProgressDialog progressDialog = null;
+
+	private final Runnable returnRes = new Runnable() {
+		public void run() {
+			if (rows != null && rows.size() > 0) {
+				adapter.notifyDataSetChanged();
+				for (int i = 0; i < rows.size(); i++) {
+					MegaListRow row = rows.get(i);
+					adapter.add_row(row);
+				}
+			}
+			progressDialog.dismiss();
+			adapter.notifyDataSetChanged();
+		}
+	};
+
+	private List<MegaListRow> rows = null;
+
+	private Runnable viewOrders;
 
 	public MegaListActivity() {
 		super();
@@ -50,9 +66,9 @@ public class MegaListActivity extends ListActivity {
 				if (item != null) {
 					if (item.getClass() == MegaListTaskRow.class) {
 						TaskToggler.toggleStatus(getResources(), (MegaListTaskRow) item);
-						TextView textView = (TextView) ((LinearLayout) view).findViewById(R.id.toptext);
+						TextView textView = (TextView) ((LinearLayout) view).findViewById(R.id.text);
 						textView.setText(item.getName() + " " + item.getStatus());
-//						textView.setTextColor(R.color.faded);
+						// textView.setTextColor(R.color.faded);
 						view.invalidate();
 					} else if (item.getClass() == MegaListSkillTreeRow.class) {
 						((MegaListSkillTreeRow) item).toggle_hidden();
@@ -82,20 +98,6 @@ public class MegaListActivity extends ListActivity {
 		}
 		runOnUiThread(returnRes);
 	}
-
-	private Runnable returnRes = new Runnable() {
-		public void run() {
-			if (rows != null && rows.size() > 0) {
-				adapter.notifyDataSetChanged();
-				for (int i = 0; i < rows.size(); i++) {
-					MegaListRow row = rows.get(i);
-					adapter.add_row(row);
-				}
-			}
-			progressDialog.dismiss();
-			adapter.notifyDataSetChanged();
-		}
-	};
 
 	private List<MegaListRow> jsonToArray(String data) {
 		List<MegaListRow> results = new ArrayList<MegaListRow>();

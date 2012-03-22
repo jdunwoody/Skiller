@@ -1,9 +1,9 @@
 package com.james.skiller.model;
 
 public interface Row {
-	String getName();
-
 	int getId();
+
+	String getName();
 
 	boolean getStatus();
 }

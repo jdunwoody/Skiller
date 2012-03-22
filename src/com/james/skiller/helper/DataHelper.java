@@ -15,7 +15,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.util.Log;
 
-
 public class DataHelper {
 
 	public String readData(String url) {
