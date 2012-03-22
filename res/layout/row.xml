@@ -4,21 +4,17 @@
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:background="@color/white"
     android:padding="0dp"
-    android:textColor="@color/light_blue"
     android:textSize="16sp" >
 
     <TextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="0.87"
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_weight="0.87" />
 
-    <ImageView
+   <!--  <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/promotion" />
+        android:layout_height="wrap_content" /> -->
 
 </LinearLayout>

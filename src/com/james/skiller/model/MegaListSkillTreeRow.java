@@ -24,12 +24,12 @@ public class MegaListSkillTreeRow extends MegaListRow {
 		return tasks;
 	}
 
-	public boolean getStatus() {
-		return false;
+	public double getScore() {
+		return score;
 	}
 
-	public double score() {
-		return score;
+	public boolean getStatus() {
+		return false;
 	}
 
 	public void toggle_hidden() {

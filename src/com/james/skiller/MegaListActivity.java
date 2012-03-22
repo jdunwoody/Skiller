@@ -13,8 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.james.skiller.helper.DataHelper;
 import com.james.skiller.helper.MegaListRowAdapter;
@@ -44,7 +42,6 @@ public class MegaListActivity extends ListActivity {
 	};
 
 	private List<MegaListRow> rows = null;
-
 	private Runnable viewOrders;
 
 	public MegaListActivity() {
@@ -66,13 +63,11 @@ public class MegaListActivity extends ListActivity {
 				if (item != null) {
 					if (item.getClass() == MegaListTaskRow.class) {
 						TaskToggler.toggleStatus(getResources(), (MegaListTaskRow) item);
-						TextView textView = (TextView) ((LinearLayout) view).findViewById(R.id.text);
-						textView.setText(item.getName() + " " + item.getStatus());
-						// textView.setTextColor(R.color.faded);
-						view.invalidate();
-					} else if (item.getClass() == MegaListSkillTreeRow.class) {
-						((MegaListSkillTreeRow) item).toggle_hidden();
+						adapter.updateRow(item, view);
 					}
+					// else if (item.getClass() == MegaListSkillTreeRow.class) {
+					// ((MegaListSkillTreeRow) item).toggle_hidden();
+					// }
 				}
 			}
 		});

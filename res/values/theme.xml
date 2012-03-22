@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<style name="CustomTheme" parent="android:Theme.Light.NoTitleBar">
+		<!-- <item name="android:textColor">@color/light_blue</item> -->
+		<!-- <item name="android:colorBackground">@color/custom_theme_color</item> -->
+	</style>
+</resources>

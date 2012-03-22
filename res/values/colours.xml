@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="black">#000000</color>
+    <color name="black">#000033</color>
     <color name="white">#FFFFFF</color>
-    <color name="light_blue">#000055</color>
 
     <!-- #E6D0AC</color> -->
-    <color name="faded">#00FF00</color> <!-- #998A73</color> -->
+    <color name="faded">#b0b0ff</color> <!-- #998A73</color> -->
     <color name="dark_brown">#0000FF</color> <!-- #524021</color> -->
+    <color name="light_blue">#b0b0ff</color>
 
 </resources>
