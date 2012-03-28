@@ -47,6 +47,10 @@ public class MegaListActivity extends ListActivity {
 	public MegaListActivity() {
 		super();
 		this.dataHelper = new DataHelper();
+
+		// Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Thin.ttf");
+		// TextView tv = (TextView) findViewById(R.id.FontTextView);
+		// tv.setTypeface(tf);
 	}
 
 	@Override
