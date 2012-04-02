@@ -2,13 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:skiller="http://schemas.android.com/apk/res/com.james.skiller"
     android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:layout_height="92dp"
     android:background="@color/white"
     android:clipChildren="true"
     android:clipToPadding="true"
     android:paddingLeft="5dp"
     android:textSize="25sp" >
-
+  
+  <!-- android:layout_height="?android:attr/listPreferredItemHeight" -->
+  
     <com.james.skiller.helper.RobotoTextView
         android:id="@+id/text"
         android:layout_width="0dip"

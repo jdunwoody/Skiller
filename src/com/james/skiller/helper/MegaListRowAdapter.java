@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,15 +54,19 @@ public class MegaListRowAdapter extends ArrayAdapter<MegaListRow> {
 
 	public void updateRow(MegaListRow row, View v) {
 		TextView tt = (TextView) v.findViewById(R.id.text);
+		TextView statusText = (TextView) v.findViewById(R.id.status_text);
+
 		if (tt != null) {
-			tt.setTextColor(blue);
-
 			if (row.getClass() == MegaListSkillTreeRow.class) {
-				MegaListSkillTreeRow skillTreeRow = (MegaListSkillTreeRow) row;
-				tt.setText(row.getName() + " (" + skillTreeRow.getScore() + ")");
+				tt.setText(row.getName());
 				tt.setTextSize(34.0f);
-				// tt.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
+				tt.setTextColor(black);
 
+				MegaListSkillTreeRow skillTreeRow = (MegaListSkillTreeRow) row;
+				statusText.setText(String.valueOf(skillTreeRow.getScore()));
+
+				// MegaListSkillTreeRow skillTreeRow = (MegaListSkillTreeRow) row;
+				// tt.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
 				// Typeface face = Typeface.createFromAsset(getContext().getAssets(), "Roboto-Bold.ttf");
 				// tt.setTypeface(face);
 
@@ -69,17 +74,15 @@ public class MegaListRowAdapter extends ArrayAdapter<MegaListRow> {
 				tt.setTextSize(24.0f);
 				tt.setTextColor(calculateTextColour(row));
 				tt.setText(row.getName());
+				statusText.setText(row.getStatus() ? "Complete" : "Incomplete");
+
+				if (row.getStatus()) {
+					tt.setPaintFlags(tt.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+				} else {
+					tt.setPaintFlags(tt.getPaintFlags() & (Paint.STRIKE_THRU_TEXT_FLAG ^ tt.getPaintFlags()));
+				}
 				// tt.setTextAppearance(getContext(), android.R.style.TextAppearance_Medium);
 			}
-		}
-
-		TextView statusText = (TextView) v.findViewById(R.id.status_text);
-		if (row.getClass() == MegaListSkillTreeRow.class) {
-			MegaListSkillTreeRow skillTreeRow = (MegaListSkillTreeRow) row;
-			statusText.setText(String.valueOf(skillTreeRow.getScore()));
-
-		} else {
-			statusText.setText(row.getStatus() ? "Complete" : "Incomplete");
 		}
 
 		// ImageView image = (ImageView) v.findViewById(R.id.icon);
@@ -119,7 +122,7 @@ public class MegaListRowAdapter extends ArrayAdapter<MegaListRow> {
 		// // }
 		// // });
 		// }
-		v.postInvalidate();
+		// v.postInvalidate();
 	}
 
 	private void animateRow(View rowView) {
