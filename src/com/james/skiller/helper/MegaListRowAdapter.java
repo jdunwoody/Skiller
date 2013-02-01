@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.james.skiller.R;
@@ -54,7 +55,8 @@ public class MegaListRowAdapter extends ArrayAdapter<MegaListRow> {
 
 	public void updateRow(MegaListRow row, View v) {
 		TextView tt = (TextView) v.findViewById(R.id.text);
-		TextView statusText = (TextView) v.findViewById(R.id.status_text);
+		Button statusButton = (Button) v.findViewById(R.id.toggle_status_button);
+		// TextView statusText = (TextView) v.findViewById(R.id.status_text);
 
 		if (tt != null) {
 			if (row.getClass() == MegaListSkillTreeRow.class) {
@@ -63,24 +65,24 @@ public class MegaListRowAdapter extends ArrayAdapter<MegaListRow> {
 				tt.setTextColor(black);
 
 				MegaListSkillTreeRow skillTreeRow = (MegaListSkillTreeRow) row;
-				statusText.setText(String.valueOf(skillTreeRow.getScore()));
-
-				// MegaListSkillTreeRow skillTreeRow = (MegaListSkillTreeRow) row;
-				// tt.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
-				// Typeface face = Typeface.createFromAsset(getContext().getAssets(), "Roboto-Bold.ttf");
-				// tt.setTypeface(face);
+				statusButton.setText(String.valueOf(skillTreeRow.getScore()));
+				// statusText.setText(String.valueOf(skillTreeRow.getScore()));
 
 			} else {
 				tt.setTextSize(24.0f);
 				tt.setTextColor(calculateTextColour(row));
 				tt.setText(row.getName());
-				statusText.setText(row.getStatus() ? "Complete" : "Incomplete");
 
 				if (row.getStatus()) {
 					tt.setPaintFlags(tt.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+					// statusText.setText("Complete");
+					statusButton.setText("Complete");
 				} else {
 					tt.setPaintFlags(tt.getPaintFlags() & (Paint.STRIKE_THRU_TEXT_FLAG ^ tt.getPaintFlags()));
+					// statusText.setText("Incomplete");
+					statusButton.setText("Complete");
 				}
+
 				// tt.setTextAppearance(getContext(), android.R.style.TextAppearance_Medium);
 			}
 		}

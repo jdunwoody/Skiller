@@ -2,25 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:skiller="http://schemas.android.com/apk/res/com.james.skiller"
     android:layout_width="fill_parent"
-    android:layout_height="92dp"
+    android:layout_height="48dp"
     android:background="@color/white"
     android:clipChildren="true"
     android:clipToPadding="true"
+    android:paddingBottom="10dp"
     android:paddingLeft="5dp"
+    android:paddingTop="10dp"
     android:textSize="25sp" >
-  
-  <!-- android:layout_height="?android:attr/listPreferredItemHeight" -->
-  
+
+    <!-- android:layout_height="?android:attr/listPreferredItemHeight" -->
+
     <com.james.skiller.helper.RobotoTextView
         android:id="@+id/text"
         android:layout_width="0dip"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="0.87"
         android:ellipsize="end"
         android:lines="1"
         skiller:ttf_name="Roboto-Thin.ttf" />
 
-    <com.james.skiller.helper.RobotoTextView
+    <!--
+         <com.james.skiller.helper.RobotoTextView
         android:id="@+id/status_text"
         android:layout_width="0dip"
         android:layout_height="match_parent"
@@ -28,7 +31,13 @@
         android:ellipsize="end"
         android:lines="1"
         skiller:ttf_name="Roboto-Thin.ttf" />
+    -->
 
+    <Button
+        android:id="@+id/toggle_status_button"
+        android:layout_width="96dp"
+        android:layout_height="48dp"
+        android:onClick="toggle_status_button_click_handler" />
     <!--
          <ImageView
         android:id="@+id/icon"

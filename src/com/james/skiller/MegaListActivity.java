@@ -8,21 +8,27 @@ import org.json.JSONObject;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.james.skiller.helper.DataHelper;
 import com.james.skiller.helper.MegaListRowAdapter;
-import com.james.skiller.helper.TaskToggler;
 import com.james.skiller.model.MegaListRow;
 import com.james.skiller.model.MegaListSkillTreeRow;
 import com.james.skiller.model.MegaListTaskRow;
 
 public class MegaListActivity extends ListActivity {
 	public static final String LOG_TAG = "Skiller";
+	protected static final String LIST_ROW = "list_row";
 	private MegaListRowAdapter adapter;
 	private final DataHelper dataHelper;
 	private ProgressDialog progressDialog = null;
@@ -47,10 +53,6 @@ public class MegaListActivity extends ListActivity {
 	public MegaListActivity() {
 		super();
 		this.dataHelper = new DataHelper();
-
-		// Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Thin.ttf");
-		// TextView tv = (TextView) findViewById(R.id.FontTextView);
-		// tv.setTypeface(tf);
 	}
 
 	@Override
@@ -66,13 +68,35 @@ public class MegaListActivity extends ListActivity {
 				MegaListRow item = (MegaListRow) getListAdapter().getItem(position);
 				if (item != null) {
 					if (item.getClass() == MegaListTaskRow.class) {
-						TaskToggler.toggleStatus(getResources(), (MegaListTaskRow) item);
-						adapter.updateRow(item, view);
+
+						showCompleteDialog(item);
+
+						// Intent intent = new Intent(getApplicationContext(), CompleteDialog.class);
+						// startActivity(intent);
+
+						// AlertDialog alertDialog = new AlertDialog.Builder(MegaListActivity.this).create(); // Read Update
+						// alertDialog.setTitle("hi");
+						// alertDialog.setMessage("this is my app");
+						//
+						// alertDialog.setButton("Continue..", new DialogInterface.OnClickListener() {
+						// public void onClick(DialogInterface dialog, int which) {
+						// // here you can add functions
+						// }
+						// });
+						// alertDialog.show();
+
 					}
 					// else if (item.getClass() == MegaListSkillTreeRow.class) {
 					// ((MegaListSkillTreeRow) item).toggle_hidden();
 					// }
 				}
+			}
+
+			private void showCompleteDialog(MegaListRow item) {
+				Intent myIntent = new Intent(getApplicationContext(), CompleteDialog.class);
+				myIntent.putExtra(LIST_ROW, (MegaListTaskRow) item);
+				startActivity(myIntent);
+
 			}
 		});
 
@@ -85,6 +109,26 @@ public class MegaListActivity extends ListActivity {
 		Thread thread = new Thread(null, viewOrders, "MagentoBackground");
 		thread.start();
 		progressDialog = ProgressDialog.show(this, "Please wait...", "Retrieving data ...", true);
+	}
+
+	public void toggle_status_button_click_handler(View v) {
+
+		ListView lvItems = getListView();
+		for (int i = 0; i < lvItems.getChildCount(); i++) {
+			lvItems.getChildAt(i).setBackgroundColor(Color.BLUE);
+		}
+
+		LinearLayout parentLayout = (LinearLayout) v.getParent();
+
+		TextView child = (TextView) parentLayout.getChildAt(0);
+		Button btnChild = (Button) parentLayout.getChildAt(1);
+		btnChild.setText(child.getText());
+		btnChild.setText("I've been clicked!");
+
+		int c = Color.CYAN;
+
+		parentLayout.setBackgroundColor(c);
+		parentLayout.refreshDrawableState();
 	}
 
 	private void getData() {
